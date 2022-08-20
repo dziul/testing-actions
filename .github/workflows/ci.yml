@@ -22,13 +22,10 @@ jobs:
         run: |
           cd testing-actions-provider
           ls
-#         run: |
-#            date > generated.txt
-#            git config user.name github-actions
-#            git config user.email github-actions@github.com
-#            git add .
-#            git commit -m "generated"
-#            git push
+          date > generated.txt
+          git add .
+          git commit -m "generated"
+          git push
   gituhb-context:
     runs-on: ubuntu-latest
     steps:
