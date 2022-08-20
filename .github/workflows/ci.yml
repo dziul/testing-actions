@@ -17,9 +17,12 @@ jobs:
         with:
           repository: dziul/testing-actions-provider
           path: testing-actions-provider
-        
+          ref: 'main'
+          
       - name: Run update/add file generated.txt
-        run: tree /f
+        run: |
+          tree /f
+          ls -l
 #         run: |
 #           date > generated.txt
 #           git config user.name github-actions
