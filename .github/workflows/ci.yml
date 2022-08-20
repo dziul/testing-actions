@@ -1,5 +1,5 @@
-# [Documentation - Github Actions](https://docs.github.com/actions)
-
+# [Github Actions](https://docs.github.com/actions)
+# [Contexts](https://docs.github.com/pt/actions/learn-github-actions/contexts)
 name: CI
 
 on:
@@ -9,16 +9,28 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  add-file:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout external repo
+        uses: actions/checkout@v3
+        with:
+          repository: dziul/testing-actions-provider
+          path: testing-actions-provider
+        
+      - name: Run update/add file generated.txt
+        run: tree /f
+#         run: |
+#           date > generated.txt
+#           git config user.name github-actions
+#           git config user.email github-actions@github.com
+#           git add .
+#           git commit -m "generated"
+#           git push
+  gituhb-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print context github
+        run: ${{ toJSON(github) }}
       
-      - name: Run a one-line script
-        run: |
-          date > generated.txt
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "generated"
-          git push
+       
