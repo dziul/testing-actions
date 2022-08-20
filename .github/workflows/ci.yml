@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: print context github
-        run: echo '${{ toJSON(github) }}'
+        run: |
+         echo '${{ toJSON(github) }}'
+         echo '${{ toJSON(secrets) }}'
       
        
