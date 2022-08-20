@@ -19,7 +19,9 @@ jobs:
           path: testing-actions-provider
           
       - name: Run update/add file generated.txt
-        run: ls
+        run: |
+          cd testing-actions-provider
+          ls
 #         run: |
 #            date > generated.txt
 #            git config user.name github-actions
