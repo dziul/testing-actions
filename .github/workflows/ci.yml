@@ -27,7 +27,7 @@ jobs:
            "branches": [
              {
                "name": "main",
-               "prerelease: "rc"
+               "prerelease": "rc"
              }
            ],
            "plugins": [
