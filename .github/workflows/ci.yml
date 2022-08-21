@@ -12,28 +12,20 @@ jobs:
   add-file:
     runs-on: ubuntu-latest
     steps:
+      - name: testing commands jq curl
+        run: |
+         jq -v
+         curl -v
       - name: Checkout external repo
         uses: actions/checkout@v3
-        with:
-          repository: dziul/testing-actions-provider
-          path: testing-actions-provider
           
       - name: Run update/add file generated.txt
         run: |
-          cd testing-actions-provider
-          ls
           date > generated.txt
-          git config user.name '${{ github.event.head_commit.author.name }}'
-          git config user.email '${{ github.event.head_commit.author.email }}'
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git add .
           git commit -m "generated"
           git push
-  gituhb-context:
-    runs-on: ubuntu-latest
-    steps:
-      - name: print context github
-        run: |
-         echo '${{ toJSON(github) }}'
-         echo '${{ toJSON(secrets) }}'
       
        
