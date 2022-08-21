@@ -17,7 +17,16 @@ jobs:
         run: |
          jq --version
          curl --version
-         echo $(cat .releaserc)
+         echo '
+         {
+          "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            ["@semantic-release/exec", {
+             "prepareCmd": "echo '--sou mensagem!'"
+            }],
+          ]
+         }'
          
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
