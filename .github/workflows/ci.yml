@@ -22,11 +22,14 @@ jobs:
     
       - name: Set semantic-release configuration 
         run: |
-         # jq --version
-         # curl --version
          echo '
          {
-           "branches": ["main"],
+           "branches": [
+             {
+               "name": "main",
+               "prerelease: "rc"
+             }
+           ],
            "plugins": [
              "@semantic-release/commit-analyzer",
              "@semantic-release/release-notes-generator",
