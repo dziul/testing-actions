@@ -30,7 +30,7 @@ jobs:
              "@semantic-release/commit-analyzer",
              "@semantic-release/release-notes-generator",
              ["@semantic-release/exec", {
-              "prepareCmd": "rm -f .releaserc"
+              "verifyConditionsCmd": "rm -f .releaserc"
              }],
            ]
          }' > .releaserc
