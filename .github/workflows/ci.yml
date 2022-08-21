@@ -23,8 +23,8 @@ jobs:
           cd testing-actions-provider
           ls
           date > generated.txt
-          git config user.name ${{ github.event.head_commit.author.name }}
-          git config user.email ${{ github.event.head_commit.author.email }}
+          git config user.name '${{ github.event.head_commit.author.name }}'
+          git config user.email '${{ github.event.head_commit.author.email }}'
           git add .
           git commit -m "generated"
           git push
