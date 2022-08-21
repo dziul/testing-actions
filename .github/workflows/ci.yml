@@ -43,7 +43,7 @@ jobs:
           export TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
           mkdir -p .github/badges
           cd .github/badges
-          curl -k -X 'https://img.shields.io/static/v1?label=@org/sample&message=$TAG&color=blueviolet'   > version.svg
+          curl -k -o version.svg 'https://img.shields.io/static/v1?label=@org/sample&message=$TAG&color=blueviolet'
           
       - name: Run commit and push
         run: |
