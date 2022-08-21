@@ -46,12 +46,12 @@ jobs:
         id: semantic_release
 #          export TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
         run: |
-          export TAG=""
+          export TAG="null"
           npx -y -p @semantic-release/exec  semantic-release
           echo "::set-output name=tag::$TAG"
         
       - name: Run create version badge
-        if: ${{ steps.semantic_release.outputs.tag != "" }}
+        if: ${{ steps.semantic_release.outputs.tag != "null" }}
         run: |
           mkdir -p .github/badges
           cd .github/badges
