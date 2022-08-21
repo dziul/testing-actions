@@ -34,9 +34,8 @@ jobs:
           ]
          }' > .releaserc
       
-#       - name: Run semantic-release 
-#         run: |
-#           npx -y -p @semantic-release/exec  semantic-release -d
+      - name: Run semantic-release
+        run: npx -y -p @semantic-release/exec  semantic-release -d
           
       - name: Run update/add file generated.txt
 #         working-directory: ./app
