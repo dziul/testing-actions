@@ -1,0 +1,7 @@
+name: "Semantic Versioning"
+description: "release tag and badge versioning"
+inputs:
+  file-path: # id of input
+    description: "Path to test script"
+    required: true
+    default: "test-file.js"
