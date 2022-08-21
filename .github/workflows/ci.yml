@@ -36,14 +36,18 @@ jobs:
          }' > .releaserc
       
       - name: Run semantic-release
-        run: npx -y -p @semantic-release/exec  semantic-release
+        id: semantic_release
+        run: |
+          npx -y -p @semantic-release/exec  semantic-release
+          export TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "::set-output name=tag::$TAG"
         
       - name: Run create version badge
         run: |
-          export TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
           mkdir -p .github/badges
           cd .github/badges
-          curl -k -o version.svg 'https://img.shields.io/static/v1?label=@org/sample&message=$TAG&color=blueviolet'
+          curl -k -o version.svg /
+          "https://img.shields.io/static/v1?label=@org/sample&message=${{ steps.semantic_release.outputs.tag }}&color=blueviolet"
           
       - name: Run commit and push
         run: |
