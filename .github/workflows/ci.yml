@@ -57,7 +57,7 @@ jobs:
           cd .github/badges
           curl -k -o version.svg \
           "https://img.shields.io/static/v1?label=@org/sample&message=${{ steps.semantic_release.outputs.tag }}&color=blueviolet"
-          git checkout $env:GITHUB_REF_NAME
+          git checkout $GITHUB_REF_NAME
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
