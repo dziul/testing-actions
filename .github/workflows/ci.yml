@@ -30,21 +30,31 @@ jobs:
              "@semantic-release/commit-analyzer",
              "@semantic-release/release-notes-generator",
              ["@semantic-release/exec", {
-              "prepareCmd": "echo '--sou mensagem!'"
+              "prepareCmd": "rm -f .releaserc"
              }],
            ]
          }' > .releaserc
       
       - name: Run semantic-release
         run: npx -y -p @semantic-release/exec  semantic-release
+        
+      - name: Run create version badge
+        run: |
+          export TAG= $(git describe --tags `git rev-list --tags --max-count=1`)
+          mkdir -p .github/badges
+          cd .github/badges
+          curl -k -X 'https://img.shields.io/static/v1?label=@org/sample&message=$TAG&color=blueviolet'   > version.svg
           
-#       - name: Run update/add file generated.txt
+      - name: Run commit and push
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git diff-index --quiet HEAD || git commit -m 'chore: update to $TAG'
+          git push
 # #         working-directory: ./app
 #         run: |
 #           date > generated.txt
-#           git config user.name github-actions
-#           git config user.email github-actions@github.com
-#           git add .
 #           git commit -m "generated"
 #           git push
       
