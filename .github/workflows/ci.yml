@@ -1,4 +1,5 @@
 # [Github Actions](https://docs.github.com/actions)
+# [aprenda github actions](https://docs.github.com/pt/actions/learn-github-actions)
 # [Contexts](https://docs.github.com/pt/actions/learn-github-actions/contexts)
 name: CI
 
@@ -16,10 +17,19 @@ jobs:
         run: |
          jq --version
          curl --version
-      - name: Checkout external repo
-        uses: actions/checkout@v3
+         echo $(cat .releaserc)
+         
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      
+#       - name: Semantic release
+#         run: |
+#           npx -y -p @semantic-release/exec    
           
       - name: Run update/add file generated.txt
+#         working-directory: ./app
         run: |
           date > generated.txt
           git config user.name github-actions
