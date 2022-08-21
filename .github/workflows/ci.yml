@@ -17,6 +17,7 @@ jobs:
         with:
           repository: dziul/testing-actions-provider
           path: testing-actions-provider
+          token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Run update/add file generated.txt
         run: |
