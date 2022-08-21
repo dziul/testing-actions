@@ -6,9 +6,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   add-file:
@@ -24,21 +24,22 @@ jobs:
         run: |
          echo '
          {
-           "branches": [
-             {
-               "name": "main",
-               "channel": "rc",
-               "prerelease": "rc"
-             }
-           ],
-           "plugins": [
-             "@semantic-release/commit-analyzer",
-             "@semantic-release/release-notes-generator",
-             ["@semantic-release/exec", {
-              "verifyConditionsCmd": "rm -f .releaserc"
-             }],
-           ]
-         }' > .releaserc
+          "branches": [
+            "main",
+            {
+              "name": "develop",
+              "channel": "rc",
+              "prerelease": "rc"
+            }
+         ],
+         "plugins": [
+           "@semantic-release/commit-analyzer",
+           "@semantic-release/release-notes-generator",
+          ["@semantic-release/exec",
+           {
+             "verifyConditionsCmd": "rm -f .releaserc"
+           }]
+         ]}' > .releaserc
       
       - name: Run semantic-release
         id: semantic_release
