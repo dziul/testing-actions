@@ -13,10 +13,16 @@ jobs:
   add-file:
     runs-on: ubuntu-latest
     steps:
-      - name: testing commands jq curl
+    
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+    
+      - name: Set semantic-release configuration 
         run: |
-         jq --version
-         curl --version
+         # jq --version
+         # curl --version
          echo '
          {
           "plugins": [
@@ -26,16 +32,11 @@ jobs:
              "prepareCmd": "echo '--sou mensagem!'"
             }],
           ]
-         }'
-         
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
+         }' > .releaserc
       
-#       - name: Semantic release
+#       - name: Run semantic-release 
 #         run: |
-#           npx -y -p @semantic-release/exec    
+#           npx -y -p @semantic-release/exec  semantic-release -d
           
       - name: Run update/add file generated.txt
 #         working-directory: ./app
