@@ -46,7 +46,7 @@ jobs:
         run: |
           mkdir -p .github/badges
           cd .github/badges
-          curl -k -o version.svg /
+          curl -k -o version.svg \
           "https://img.shields.io/static/v1?label=@org/sample&message=${{ steps.semantic_release.outputs.tag }}&color=blueviolet"
           
       - name: Run commit and push
