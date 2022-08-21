@@ -54,7 +54,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git diff-index --quiet HEAD || git commit -m 'chore: update to $TAG'
+          git diff-index --quiet HEAD || git commit -m "chore(badge): update to ${{ steps.semantic_release.outputs.tag }}"
           git push
 # #         working-directory: ./app
 #         run: |
