@@ -36,16 +36,16 @@ jobs:
          }' > .releaserc
       
       - name: Run semantic-release
-        run: npx -y -p @semantic-release/exec  semantic-release -d
+        run: npx -y -p @semantic-release/exec  semantic-release
           
-      - name: Run update/add file generated.txt
-#         working-directory: ./app
-        run: |
-          date > generated.txt
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "generated"
-          git push
+#       - name: Run update/add file generated.txt
+# #         working-directory: ./app
+#         run: |
+#           date > generated.txt
+#           git config user.name github-actions
+#           git config user.email github-actions@github.com
+#           git add .
+#           git commit -m "generated"
+#           git push
       
        
