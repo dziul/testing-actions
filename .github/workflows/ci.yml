@@ -14,8 +14,8 @@ jobs:
     steps:
       - name: testing commands jq curl
         run: |
-         jq -v
-         curl -v
+         jq --version
+         curl --version
       - name: Checkout external repo
         uses: actions/checkout@v3
           
