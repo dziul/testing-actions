@@ -37,7 +37,7 @@ jobs:
            "@semantic-release/release-notes-generator",
           ["@semantic-release/exec",
            {
-             "generateNotesCmd": "echo ${nextRelease.version} && rm -f .releaserc"
+             "analyzeCommitsCmd": "echo ${nextRelease.version} && rm -f .releaserc"
            }]
          ]}' > .releaserc
       
