@@ -5,3 +5,8 @@ inputs:
     description: "Path to test script"
     required: true
     default: "test-file.js"
+    
+# https://actions-cool.github.io/github-action-branding/
+branding:
+  icon: 'tag'
+  color: 'purple'
