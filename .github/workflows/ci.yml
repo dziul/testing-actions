@@ -38,7 +38,8 @@ jobs:
           ["@semantic-release/exec",
            {
              "verifyConditionsCmd": "rm -f .releaserc",
-             "successCmd": "echo \"::set-output name=tag::${nextRelease.version}\""
+             "successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"",
+             "verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""
            }]
          ]}' > .releaserc
       
