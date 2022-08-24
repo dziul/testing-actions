@@ -1,10 +1,10 @@
 name: "Semantic Versioning"
 description: "release tag and badge versioning"
 inputs:
-  file-path: # id of input
-    description: "Path to test script"
-    required: true
-    default: "test-file.js"
+  token:
+    description: "token"
+    required: false
+    default: ${{ github.token }}
     
 # https://actions-cool.github.io/github-action-branding/
 branding:
@@ -18,11 +18,12 @@ runs:
   steps:
     - uses: actions/checkout@v3
       with:
+        token: ${{ inputs.token }}
         
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - name: Set semantic-release configuration 
+    - name: test
     # --extends  para semantic-release
       run: |
         echo -- ok
