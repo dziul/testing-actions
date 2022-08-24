@@ -10,3 +10,22 @@ inputs:
 branding:
   icon: 'tag'
   color: 'purple'
+  
+  
+  
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Set semantic-release configuration 
+    # --extends  para semantic-release
+      run: |
+        echo -- ok
+        echo -- outro ok
+        
+          
