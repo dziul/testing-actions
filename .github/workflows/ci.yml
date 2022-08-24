@@ -15,57 +15,7 @@ jobs:
   add-file:
     runs-on: ubuntu-latest
     steps:
-    
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-    
-      - name: Set semantic-release configuration 
-        run: |
-         echo '
-         {
-          "branches": [
-            "main",
-            {
-              "name": "develop",
-              "channel": "rc",
-              "prerelease": "rc"
-            }
-         ],
-         "plugins": [
-           "@semantic-release/commit-analyzer",
-           "@semantic-release/release-notes-generator",
-          ["@semantic-release/exec",
-           {
-             "verifyConditionsCmd": "rm -f .releaserc",
-             "successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"",
-             "verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""
-           }],
-           ["@semantic-release/exec",
-           {
-             "successCmd": "echo \"--successCmd ${nextRelease.version}\"",
-             "verifyReleaseCmd": "echo \"--verifyReleaseCmd ${nextRelease.version}\""
-           }]
-         ]}' > .releaserc
-      
-      - name: Run semantic-release
-        id: semantic_release
-#          export TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-        run: |
-          npx -y -p @semantic-release/exec  semantic-release
+      - uses: ./.github/actions/semantic-version
         
-      - name: Run create version badge
-        if: ${{ steps.semantic_release.outputs.tag != '' }}
-        run: |
-          mkdir -p .github/badges
-          cd .github/badges
-          curl -k -o version.svg \
-          "https://img.shields.io/static/v1?label=@org/sample&message=${{ steps.semantic_release.outputs.tag }}&color=blueviolet"
-          git checkout $GITHUB_REF_NAME
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git diff-index --quiet HEAD || git commit -m "chore(badge): update to ${{ steps.semantic_release.outputs.tag }}"
-          git push
-# #         working-directory: ./app
+          
