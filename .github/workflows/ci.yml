@@ -7,15 +7,16 @@ name: CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main", "develop" ]
+    branches: 
+      - 'main'
+      - 'develop'
 
 jobs:
   add-file:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - uses: ./.github/actions/semantic-version
+        with:
+          token: ${{ github.token }}
         
           
