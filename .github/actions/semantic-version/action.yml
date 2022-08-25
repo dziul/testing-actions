@@ -28,15 +28,10 @@ runs:
          
     - name: Checking exists configuration file
       shell: bash
-      run: |
-        CONFIG_FILENAME=".releaserc"
-        if [ -f "$CONFIG_FILENAME" ]; then
-          CONFIG_FILENAME="${{ inputs.config-file-path }}"
-        else
-          
-          echo '{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}' > $CONFIG_FILENAME
-        fi
-        NPX_PACKAGES=$(cat $CONFIG_FILENAME | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-p semantic-release -p @semantic-release/exec"; . + " -p " + $item)')
-        cat $CONFIG_FILENAME | jq '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' > $CONFIG_FILENAME
-        cat $CONFIG_FILENAME
+      run: CONFIG_FILENAME=".releaserc" && \
+        [ -f "$CONFIG_FILENAME" ] && CONFIG_FILENAME="${{ inputs.config-file-path }}" || \
+        echo '{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}' > $CONFIG_FILENAME && \
+        NPX_PACKAGES=$(cat $CONFIG_FILENAME | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-p semantic-release -p @semantic-release/exec"; . + " -p " + $item)') && \
+        cat $CONFIG_FILENAME | jq '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' > $CONFIG_FILENAME && \
+        cat $CONFIG_FILENAME && \
         eval  "npx -y $NPX_PACKAGES semantic-release"
