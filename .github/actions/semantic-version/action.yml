@@ -32,11 +32,11 @@ runs:
         export CONFIG_FILENAME=".releaserc"
         export PLUGIN_TO_NEXT_RELEASE="[\"@semantic-release/exec\",2]"
         if [ -f "${{ inputs.config-file-path }}" ]; then
-          export CONFIG_FILENAME="${{ inputs.config-file-path }}"
+          CONFIG_FILENAME="${{ inputs.config-file-path }}"
         else
-          export CONFIG_DEFAULT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
+          CONFIG_DEFAULT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
           echo $CONFIG_DEFAULT | jq -r > $CONFIG_FILENAME
         fi
-        jq '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' -r $CONFIG_FILENAME > $CONFIG_FILENAME
-        export NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (" "; . + " -p " + $item)' -r $CONFIG_FILENAME)
+        jq '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' -f $CONFIG_FILENAME > $CONFIG_FILENAME
+        export NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (" "; . + " -p " + $item)' -f $CONFIG_FILENAME)
         echo "-p semantic-release $NPX_PACKAGES"
