@@ -30,7 +30,7 @@ runs:
       shell: bash
       run: |
         CONFIG_FILENAME=".releaserc"
-        CONFIG_FILENAME_INCLUDE_PLUGIN="${{ GITHUB_ACTION }}"
+        CONFIG_FILENAME_INCLUDE_PLUGIN=$GITHUB_ACTION
         PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": " echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\" "}]'
         echo $PLUGIN_TO_NEXT_RELEASE > $CONFIG_FILENAME_INCLUDE_PLUGIN
         
