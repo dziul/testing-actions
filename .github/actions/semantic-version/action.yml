@@ -1,5 +1,10 @@
 name: "Semantic Versioning"
 description: "Release tag and badge versioning"
+# https://actions-cool.github.io/github-action-branding/
+branding:
+  icon: 'tag'
+  color: 'purple'
+  
 inputs:
   config-file-path:
     description: "Configuration file from semantic-release"
@@ -12,10 +17,8 @@ inputs:
     type: boolean
     default: false
     
-# https://actions-cool.github.io/github-action-branding/
-branding:
-  icon: 'tag'
-  color: 'purple'
+env:
+  TEST: "okok"
     
 runs:
   using: "composite"
@@ -31,6 +34,7 @@ runs:
          CONFIG_DEFAULT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
          PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": " echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\" "}]'
          ####
+         echo ${{ env.TEST }}
          echo "CONFIG_FILENAME=$CONFIG_FILENAME" >> $GITHUB_ENV
          echo "CONFIG_DEFAULT=$CONFIG_DEFAULT" >> $GITHUB_ENV
          echo "PLUGIN_TO_NEXT_RELEASE=$PLUGIN_TO_NEXT_RELEASE" >> $GITHUB_ENV
