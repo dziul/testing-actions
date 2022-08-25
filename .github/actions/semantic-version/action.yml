@@ -37,12 +37,13 @@ runs:
           echo "CONFIG_FILENAME=${{ inputs.config-file-path }}" >> $GITHUB_ENV
         else
           echo $CONFIG_DEFAULT | jq -r $CONFIG_FILENAME
-          cat $CONFIG_FILENAME
         fi
+        cat $CONFIG_FILENAME
     - name: Setup to versioning
       shell: bash
       run: |
         jq --arg value $CONFIG_DEFAULT  '.plugins|= . + $value'   $CONFIG_FILENAME
         cat $CONFIG_FILENAME
+        ls -a
         NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)' $CONFIG_FILENAME)
         echo $NPX_PACKAGES
