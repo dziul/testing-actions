@@ -38,7 +38,7 @@ runs:
         else
           echo $CONFIG_DEFAULT | jq -r $CONFIG_FILENAME
         fi
-        cat $CONFIG_FILENAME
+        echo "env-----$CONFIG_FILENAME"
     - name: Setup to versioning
       shell: bash
       run: |
