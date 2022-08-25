@@ -41,7 +41,7 @@ runs:
 
         cat $CONFIG_FILENAME
         
-        cat $CONFIG_FILENAME | jq --arg value $PLUGIN_TO_NEXT_RELEASE  '.plugins|= . + $value'  > $CONFIG_FILENAME
+        cat $CONFIG_FILENAME | jq --arg value $PLUGIN_TO_NEXT_RELEASE  '.plugins|= . + [$value]'  > $CONFIG_FILENAME
         
         cat $CONFIG_FILENAME
         
