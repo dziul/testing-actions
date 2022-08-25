@@ -32,7 +32,6 @@ runs:
       
          CONFIG_FILENAME=".releaserc"
          CONFIG_DEFAULT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
-         PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": " echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\" "}]'
       
         if [ -f "${{ inputs.config-file-path }}" ]; then
           CONFIG_FILENAME=${{ inputs.config-file-path }}
