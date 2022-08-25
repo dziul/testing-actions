@@ -34,15 +34,8 @@ runs:
          CONFIG_DEFAULT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
       
         if [ -f "${{ inputs.config-file-path }}" ]; then
-          CONFIG_FILENAME=${{ inputs.config-file-path }}
+          CONFIG_FILENAME="${{ inputs.config-file-path }}"
         else
           echo $CONFIG_DEFAULT > $CONFIG_FILENAME
         fi
         echo $CONFIG_FILENAME $CONFIG_DEFAULT
-#        cat $CONFIG_FILENAME
-
-#         jq --arg value ${{env.CONFIG_DEFAULT}}  '.plugins|= . + $value'   ${{env.CONFIG_FILENAME}}
-#         cat ${{env.CONFIG_FILENAME}}
-#         ls -a
-#         NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)' $CONFIG_FILENAME)
-#         echo $NPX_PACKAGES
