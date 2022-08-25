@@ -28,7 +28,7 @@ runs:
       shell: bash
       run: | 
          CONFIG_FILENAME=".releaserc"
-         CONFIG_DEFAULT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
+         CONFIG_DEFAULT="{\"branches\":[\"main\",\"master\"],\"plugins\":[\"@semantic-release/commit-analyzer\",\"@semantic-release/release-notes-generator\"]}"
          PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": " echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\" "}]'
          ####
          echo ${{ env.TEST }}
@@ -41,6 +41,8 @@ runs:
       run: |
         if [ -f "${{ inputs.config-file-path }}" ]; then
           echo "CONFIG_FILENAME=${{ inputs.config-file-path }}" >> $GITHUB_ENV
+        else
+          echo ${{env.CONFIG_DEFAULT}} | jq -r ${{env.CONFIG_FILENAME}}
         fi
         echo "env-----${{ env.CONFIG_FILENAME }} ${{ env.CONFIG_DEFAULT }}"
 #     - name: Setup to versioning
