@@ -38,6 +38,7 @@ runs:
           echo $CONFIG_DEFAULT | jq > $CONFIG_FILENAME
         fi
         cat $CONFIG_FILENAME
+        jq --arg value $PLUGIN_TO_NEXT_RELEASE  '.plugins|= . + $value' $CONFIG_FILENAME  > $CONFIG_FILENAME
         cat $CONFIG_FILENAME
         NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)' $CONFIG_FILENAME)
         echo $NPX_PACKAGES
