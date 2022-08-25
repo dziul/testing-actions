@@ -17,9 +17,6 @@ inputs:
     type: boolean
     default: false
     
-env:
-  TEST: "okok"
-    
 runs:
   using: "composite"
   steps:
@@ -35,9 +32,9 @@ runs:
          PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": " echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\" "}]'
          ####
          echo ${{ env.TEST }}
-         echo "CONFIG_FILENAME=$CONFIG_FILENAME" >> $GITHUB_ENV
-         echo "CONFIG_DEFAULT=$CONFIG_DEFAULT" >> $GITHUB_ENV
-         echo "PLUGIN_TO_NEXT_RELEASE=$PLUGIN_TO_NEXT_RELEASE" >> $GITHUB_ENV
+         echo "CONFIG_FILENAME=\"$CONFIG_FILENAME\"" >> $GITHUB_ENV
+         echo "CONFIG_DEFAULT=\"$CONFIG_DEFAULT\"" >> $GITHUB_ENV
+         echo "PLUGIN_TO_NEXT_RELEASE=\"$PLUGIN_TO_NEXT_RELEASE\"" >> $GITHUB_ENV
          
     - name: Checking exists configuration file
       shell: bash
