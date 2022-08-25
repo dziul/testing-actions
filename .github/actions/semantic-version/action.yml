@@ -32,8 +32,6 @@ runs:
         CONFIG_FILENAME=".releaserc"
         PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": "echo \\"::set-output name=version::${nextRelease.version}\\" && echo \\"::set-output name=channel::${nextRelease.channel}\\""}]'
         
-        cat aaa.json
-        
         if [ -f "${{ inputs.config-file-path }}" ]; then
           CONFIG_FILENAME="${{ inputs.config-file-path }}"
         else
