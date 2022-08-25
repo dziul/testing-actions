@@ -38,7 +38,7 @@ runs:
           echo $CONFIG_DEFAULT > $CONFIG_FILENAME
         fi
         cat $CONFIG_FILENAME
-        jq -n --slurpfile data $CONFIG_FILENAME '$data'
+        jq -n --slurpfile data $CONFIG_FILENAME '.plugins=$data' $CONFIG_FILENAME
         cat $CONFIG_FILENAME
         NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)' $CONFIG_FILENAME)
         echo $NPX_PACKAGES
