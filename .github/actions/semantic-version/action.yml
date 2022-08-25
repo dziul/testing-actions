@@ -1,5 +1,6 @@
 # @ref [semantic-release](https://github.com/semantic-release/semantic-release)
 # @ref [nextrelease](https://github.com/semantic-release/semantic-release/blob/master/docs/developer-guide/js-api.md#nextrelease)
+# @ref [js api](https://semantic-release.gitbook.io/semantic-release/developer-guide/js-api)
 
 name: "Semantic Versioning"
 description: "Release tag and badge versioning"
