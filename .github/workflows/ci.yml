@@ -16,7 +16,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: ./.github/actions/semantic-version
-        with:
-          token: ${{ github.token }}
         
           
