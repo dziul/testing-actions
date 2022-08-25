@@ -28,6 +28,7 @@ runs:
     #
     # para listar e criar o packages 
     # .plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)
+      shell: bash
       run: |
         echo -- ok
         echo -- outro ok
