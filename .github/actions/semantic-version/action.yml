@@ -45,7 +45,7 @@ runs:
           echo ${{env.CONFIG_DEFAULT}} > ${{env.CONFIG_FILENAME}}
         fi
         echo "env-----${{ env.CONFIG_FILENAME }} ${{ env.CONFIG_DEFAULT }}"
-        cat ${{ env.CONFIG_FILENAME }}
+        echo $(cat ${{ env.CONFIG_FILENAME }})
 #     - name: Setup to versioning
 #       shell: bash
 #       run: |
