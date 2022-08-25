@@ -34,12 +34,8 @@ runs:
         if [ -f "${{ inputs.config-file-path }}" ]; then
           CONTENT=$(cat ${{ inputs.config-file-path }})
         fi
-        NPX_PACKAGES=$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)')
+        NPX_PACKAGES=$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)')
         
         echo $CONTENT | jq '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' > $CONFIG_FILENAME
-        echo $NPX_PACKAGES
-        cat $CONFIG_FILENAME
         
-        ls -a
-        
-        eval  "npx -y -p semantic-release $NPX_PACKAGES -p @semantic-release/exec semantic-release"
+        eval  echo "npx $NPX_PACKAGES -p @semantic-release/exec semantic-release"
