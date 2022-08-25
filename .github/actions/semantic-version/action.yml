@@ -41,7 +41,7 @@ runs:
         if [ -f "${{ inputs.config-file-path }}" ]; then
           echo "CONFIG_FILENAME=${{ inputs.config-file-path }}" >> $GITHUB_ENV
         else
-          echo ${{env.CONFIG_DEFAULT}} | jq -r ${{env.CONFIG_FILENAME}}
+          echo "${{env.CONFIG_DEFAULT}}" | jq -r ${{env.CONFIG_FILENAME}}
         fi
         echo "env-----${{ env.CONFIG_FILENAME }} ${{ env.CONFIG_DEFAULT }}"
     - name: Setup to versioning
