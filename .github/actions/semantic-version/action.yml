@@ -6,12 +6,11 @@ inputs:
     required: false
     type: string
     default: ''
- 
- dry_run:
-   description: "Dry run"
-   required: false
-   type: boolean
-   default: false
+  dry_run:
+    description: "Dry run"
+    required: false
+    type: boolean
+    default: false
     
 # https://actions-cool.github.io/github-action-branding/
 branding:
