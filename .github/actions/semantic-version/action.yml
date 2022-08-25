@@ -34,6 +34,6 @@ runs:
         if [ -f "${{ inputs.config-file-path }}" ]; then
           CONFIG_FILENAME="${{ inputs.config-file-path }}"
         else
-          echo $CONFIG_DEFAULT | jq -r $CONFIG_FILENAME
+          echo "$CONFIG_DEFAULT" | jq -r $CONFIG_FILENAME
         fi
         cat $CONFIG_FILENAME
