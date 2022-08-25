@@ -32,7 +32,7 @@ runs:
         CONFIG_FILENAME=".releaserc"
         PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": "echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\""}]'
         
-        echo $PLUGIN_TO_NEXT_RELEASE | jq > aaa.json
+        echo $PLUGIN_TO_NEXT_RELEASE | jq --compact-output > aaa.json
         
         cat aaa.json
         
