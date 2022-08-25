@@ -35,12 +35,12 @@ runs:
          PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": " echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\" "}]'
       
         if [ -f "${{ inputs.config-file-path }}" ]; then
-          echo "CONFIG_FILENAME=${{ inputs.config-file-path }}" >> $GITHUB_ENV
+          CONFIG_FILENAME=${{ inputs.config-file-path }}
         else
-          echo ${{env.CONFIG_DEFAULT}} > ${{env.CONFIG_FILENAME}}
+          echo $CONFIG_DEFAULT > $CONFIG_FILENAME
         fi
-        echo "env-----${{ env.CONFIG_FILENAME }} ${{ env.CONFIG_DEFAULT }}"
-        cat ${{ env.CONFIG_FILENAME }}
+        echo "env $CONFIG_FILENAME $CONFIG_DEFAULT"
+        cat $CONFIG_FILENAME
 
 #         jq --arg value ${{env.CONFIG_DEFAULT}}  '.plugins|= . + $value'   ${{env.CONFIG_FILENAME}}
 #         cat ${{env.CONFIG_FILENAME}}
