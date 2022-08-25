@@ -40,5 +40,5 @@ runs:
         cat $CONFIG_FILENAME
         cat $CONFIG_FILENAME | jq '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' > $CONFIG_FILENAME
         cat $CONFIG_FILENAME
-        NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-p semantic-release"; . + " -p " + $item)' $CONFIG_FILENAME)
-        echo $NPX_PACKAGES
+        NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)' $CONFIG_FILENAME)
+        echo "-p semantic-release $NPX_PACKAGES"
