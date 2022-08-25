@@ -29,7 +29,7 @@ runs:
     - name: Checking exists configuration file
       shell: bash
       run: |
-        CONFIG_FILENAME=.releaserc
+        CONFIG_FILENAME=".releaserc.json"
         if [ -f "" ]; then
           CONFIG_FILENAME=""
         else
@@ -38,4 +38,5 @@ runs:
         fi
         NPX_PACKAGES=$(cat $CONFIG_FILENAME | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-p semantic-release -p @semantic-release/exec"; . + " -p " + $item)')
         cat $CONFIG_FILENAME | jq -r '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' > $CONFIG_FILENAME
+        cat $CONFIG_FILENAME
         eval  "npx -y $NPX_PACKAGES semantic-release"
