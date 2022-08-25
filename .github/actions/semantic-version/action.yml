@@ -54,6 +54,8 @@ runs:
         NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
         NPX_FLAGS="-d ${{ inputs.dry_run }}"
         eval "npx $NPX_PACKAGES semantic-release $FLAGS"
+        
+        echo "$(git describe --abbrev=0 --tags)"
        
       
       
