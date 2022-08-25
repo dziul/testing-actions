@@ -1,21 +1,34 @@
+# @ref [semantic-release](https://github.com/semantic-release/semantic-release)
+# @ref [nextrelease](https://github.com/semantic-release/semantic-release/blob/master/docs/developer-guide/js-api.md#nextrelease)
+
 name: "Semantic Versioning"
 description: "Release tag and badge versioning"
-# https://actions-cool.github.io/github-action-branding/
+
+# @ref [action-branding](https://actions-cool.github.io/github-action-branding/)
 branding:
   icon: 'tag'
   color: 'purple'
   
 inputs:
-  config-file-path:
+  config_file_path:
     description: "Configuration file from semantic-release"
     required: false
     type: string
     default: ''
   dry_run:
-    description: "Dry run"
+    description: "The objective of the dry-run mode is to get a preview of the pending release."
     required: false
     type: boolean
     default: false
+    
+outputs:
+  version:
+    description: "The version of the last release"
+    value: ${{ steps.checking.outputs.version }}
+  channel:
+    description: "The distribution channel on which the last release was initially made available (undefined for the default distribution channel)"
+    value: ${{ steps.checking.outputs.version }}
+ 
     
 runs:
   using: "composite"
@@ -26,16 +39,17 @@ runs:
       with:
         node-version: 16
          
-    - name: Checking exists configuration file
+    - name: Checking exists configuration file and release version
+      id: checking
       shell: bash
       run: |
         CONFIG_FILENAME=".releaserc"
         CONTENT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
-        if [ -f "${{ inputs.config-file-path }}" ]; then
-          CONTENT=$(cat ${{ inputs.config-file-path }})
-        fi
-        NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
-        
+        if [ -f "${{ inputs.config_file_path }}" ]; then
+          CONTENT=$(cat ${{ inputs.config_file_path }})
+          rm -f ${{ inputs.config_file_path }}
+        fi        
         echo $CONTENT | jq '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' > $CONFIG_FILENAME
-        
-        eval "npx $NPX_PACKAGES semantic-release"
+        NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
+        NPX_FLAGS="-d ${{ inputs.dry_run }}"
+        eval "npx $NPX_PACKAGES semantic-release $FLAGS"
