@@ -30,7 +30,7 @@ runs:
       shell: bash
       run: |
         CONFIG_FILENAME=".releaserc"
-        PLUGIN_TO_NEXT_RELEASE='{"a":["@semantic-release/exec",{"successCmd": "echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\""}]}'
+        PLUGIN_TO_NEXT_RELEASE='["@semantic-release/exec",{"successCmd": "echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\""}]'
         
         if [ -f "${{ inputs.config-file-path }}" ]; then
           CONFIG_FILENAME="${{ inputs.config-file-path }}"
