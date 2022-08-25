@@ -38,5 +38,5 @@ runs:
           echo $CONFIG_DEFAULT | jq -r > $CONFIG_FILENAME
         fi
         jq '.plugins|= .+ [["@semantic-release/exec",{"verifyConditionsCmd": "rm -f .releaserc","successCmd": "echo \"::set-output name=tag::${nextRelease.version}\"","verifyReleaseCmd": "echo \"--version ${nextRelease.version}\""}]]' -r $CONFIG_FILENAME > $CONFIG_FILENAME
-        NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)' -r $CONFIG_FILENAME)
+        NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (" "; . + " -p " + $item)' -r $CONFIG_FILENAME)
         echo "-p semantic-release $NPX_PACKAGES"
