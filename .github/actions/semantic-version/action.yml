@@ -38,7 +38,7 @@ runs:
           CONFIG_DEFAULT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
           echo $CONFIG_DEFAULT | jq -r > $CONFIG_FILENAME
         fi
-        jq -r --arg value $(echo $PLUGIN_TO_NEXT_RELEASE | jq)  '.plugins|= . + $value' -r $CONFIG_FILENAME
+        jq --arg value $(echo $PLUGIN_TO_NEXT_RELEASE | jq -r)  '.plugins|= . + $value' -r $CONFIG_FILENAME
         cat $CONFIG_FILENAME
         NPX_PACKAGES=$( jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item (""; . + " -p " + $item)' $CONFIG_FILENAME)
         echo $NPX_PACKAGES
