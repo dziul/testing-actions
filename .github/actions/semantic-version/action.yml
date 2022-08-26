@@ -59,10 +59,11 @@ runs:
           ###
           
         fi        
-        echo $CONTENT | jq --arg config_file $CONFIG_FILENAME '.plugins|= .+ [["@semantic-release/exec",{"cmd":"echo \"::set-output name=last_version::${lastRelease.version}\"", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\""}]]' > $CONFIG_FILENAME
+        echo $CONTENT | jq --arg config_file $CONFIG_FILENAME '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"export LAST_RELEASE=${lastRelease.version}", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\""}]]' > $CONFIG_FILENAME
         NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
         NPX_FLAGS="-d ${{ inputs.dry_run }}"
         eval "npx $NPX_PACKAGES semantic-release $FLAGS"
+        echo $LAST_RELEASE
        
       
       
