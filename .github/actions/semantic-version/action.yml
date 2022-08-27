@@ -67,7 +67,16 @@ runs:
         NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
         NPX_FLAGS="-d ${{ inputs.dry_run }}"
         eval "npx $NPX_PACKAGES semantic-release $FLAGS"
-        cat $TEMP_FILE
+        
+        
+        while IFS= read -r line; do
+          echo "::set-output $line"
+        done < "$TEMP_FILE"
+        rm -f "$TEMP_FILE"
+        
+    - run: |
+        echo "${{ toJSON(steps.checking) }}"
+        
        
       
       
