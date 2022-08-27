@@ -17,8 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/semantic-version
+        id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: |
+          echo "${{ toJSON(steps.release.outputs) }}"
+          
         
           
