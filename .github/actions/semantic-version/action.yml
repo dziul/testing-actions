@@ -25,13 +25,13 @@ inputs:
 outputs:
   last_version:
     description: "The version of the last release"
-    value: ${{ steps.checking.outputs.last_version }}
+    value: ${{ steps.release.outputs.last_version }}
   next_version:
     description: "The version of the next release"
-    value: ${{ steps.checking.outputs.next_version }}
+    value: ${{ steps.release.outputs.next_version }}
   channel:
     description: "The distribution channel on which the last release was initially made available (undefined for the default distribution channel)"
-    value: ${{ steps.checking.outputs.channel }}
+    value: ${{ steps.release.outputs.channel }}
  
 
 runs:
@@ -68,7 +68,7 @@ runs:
         --arg file_temp $TEMP_FILE \
         '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":" echo \"last_version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"next_version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
         NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
-        NPX_FLAGS="-d ${{ inputs.dry_run }}"
+        NPX_FLAGS="${{ inputs.dry_run && '-d' }}"
         eval "npx $NPX_PACKAGES semantic-release $FLAGS"
         
         
