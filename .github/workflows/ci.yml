@@ -33,7 +33,7 @@ jobs:
           mkdir -p .github/badges
           cd .github/badges
           curl -k -o "version-$GITHUB_REF_NAME.svg" \
-          "https://img.shields.io/static/v1?label=@${{ steps.release.outputs.channel||'latest' }}&message=${{ steps.release.outputs.next_release||steps.release.outputs.last_release }}&color=blueviolet"
+          "https://img.shields.io/static/v1?label=@${{ steps.release.outputs.channel||'latest' }}&message=${{ steps.release.outputs.next_version || steps.release.outputs.last_version }}&color=blueviolet"
           
           git add *.svg
           git diff-index --quiet HEAD || git commit -m "chore(badge): update to ${{ steps.semantic_release.outputs.tag }}"
