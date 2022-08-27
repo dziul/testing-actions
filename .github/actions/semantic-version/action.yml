@@ -70,7 +70,7 @@ runs:
         
         
         while IFS= read -r line; do
-          echo "::set-output $line"
+          echo "::set-output name=$line"
         done < "$TEMP_FILE"
         rm -f "$TEMP_FILE"
         
