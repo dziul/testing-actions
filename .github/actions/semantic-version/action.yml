@@ -30,7 +30,7 @@ outputs:
     description: "The distribution channel on which the last release was initially made available (undefined for the default distribution channel)"
     value: ${{ steps.checking.outputs.version }}
  
-    
+
 runs:
   using: "composite"
   steps:
