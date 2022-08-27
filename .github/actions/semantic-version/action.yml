@@ -39,7 +39,7 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-         
+        cache: 'npm'
     - name: Checking exists configuration file and release version
       id: checking
       shell: bash
@@ -59,12 +59,16 @@ runs:
           ###
           
         fi
-        export OK="aaa"
-        echo $CONTENT | jq --arg config_file $CONFIG_FILENAME '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":" echo ${lastRelease.version} >> $OK", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\""}]]' > $CONFIG_FILENAME
+        
+        TEMP_FILE="${{ github.sha }}.txt"
+        echo $CONTENT | jq \
+        --arg config_file $CONFIG_FILENAME \
+        --arg filename $TEMP_FILE
+        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":" echo ${lastRelease.version} > \($filename)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"::set-output name=version::${nextRelease.version}\" && echo \"::set-output name=channel::${nextRelease.channel}\""}]]' > $CONFIG_FILENAME
         NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
         NPX_FLAGS="-d ${{ inputs.dry_run }}"
         eval "npx $NPX_PACKAGES semantic-release $FLAGS"
-        echo $OK
+        cat $TEMP_FILE
        
       
       
