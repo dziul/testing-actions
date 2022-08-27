@@ -59,7 +59,7 @@ runs:
           
         fi
         
-        TEMP_FILE="$RANDOM_${{ github.sha }}.txt"
+        TEMP_FILE="${RANDOM}_${{ github.sha }}.txt"
         echo $CONTENT | jq \
         --arg config_file $CONFIG_FILENAME \
         --arg file_temp $TEMP_FILE \
