@@ -23,12 +23,15 @@ inputs:
     default: false
     
 outputs:
-  version:
+  last_version:
     description: "The version of the last release"
-    value: ${{ steps.checking.outputs.version }}
+    value: ${{ steps.checking.outputs.last_version }}
+  next_version:
+    description: "The version of the next release"
+    value: ${{ steps.checking.outputs.next_version }}
   channel:
     description: "The distribution channel on which the last release was initially made available (undefined for the default distribution channel)"
-    value: ${{ steps.checking.outputs.version }}
+    value: ${{ steps.checking.outputs.channel }}
  
 
 runs:
@@ -40,7 +43,7 @@ runs:
       with:
         node-version: 16
     - name: Checking exists configuration file and release version
-      id: checking
+      id: release
       shell: bash
       run: |
         CONFIG_FILENAME=".releaserc"
@@ -73,10 +76,6 @@ runs:
           echo "::set-output name=$line"
         done < "$TEMP_FILE"
         rm -f "$TEMP_FILE"
-        
-    - shell: bash
-      run: |
-        echo "${{ toJSON(steps.checking) }}"
         
        
       
