@@ -74,7 +74,8 @@ runs:
         done < "$TEMP_FILE"
         rm -f "$TEMP_FILE"
         
-    - run: |
+    - shell: bash
+      run: |
         echo "${{ toJSON(steps.checking) }}"
         
        
