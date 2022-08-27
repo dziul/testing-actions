@@ -39,7 +39,6 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-        cache: 'npm'
     - name: Checking exists configuration file and release version
       id: checking
       shell: bash
