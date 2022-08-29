@@ -2,8 +2,8 @@
 # @ref [nextrelease](https://github.com/semantic-release/semantic-release/blob/master/docs/developer-guide/js-api.md#nextrelease)
 # @ref [js api](https://semantic-release.gitbook.io/semantic-release/developer-guide/js-api)
 
-name: "Semantic Versioning"
-description: "Release tag and badge versioning"
+name: "Semantic Release Action"
+description: "Fully automated version management"
 
 # @ref [action-branding](https://actions-cool.github.io/github-action-branding/)
 branding:
@@ -11,76 +11,85 @@ branding:
   color: 'purple'
   
 inputs:
-  config_file_path:
+  config-file-path:
     description: "Configuration file from semantic-release"
     required: false
     type: string
     default: ''
-  dry_run:
+  dry-run:
     description: "The objective of the dry-run mode is to get a preview of the pending release."
     required: false
     type: boolean
     default: false
- node-version:
-   description: "nodejs version to use"
-   required: false
-   default: 16
+  node-version:
+    description: "Nodejs version to use"
+    default: 16
     
 outputs:
-  last_version:
+  last-version:
     description: "The version of the last release"
-    value: ${{ steps.release.outputs.last_version }}
-  next_version:
+    value: ${{ steps.release.outputs.last-version }}
+  next-version:
     description: "The version of the next release"
-    value: ${{ steps.release.outputs.next_version }}
+    value: ${{ steps.release.outputs.next-version }}
   channel:
-    description: "The distribution channel on which the last release was initially made available (undefined for the default distribution channel)"
+    description: "The distribution channel on which the last release was initially made available (`undefined` for the default distribution channel)"
     value: ${{ steps.release.outputs.channel }}
  
 
 runs:
   using: "composite"
   steps:
-    - name: Steup Nodejs
-      uses: actions/setup-node@v3
+    
+    - uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
     - name: Checking exists configuration file and release version
       id: release
       shell: bash
       run: |
+        TEMP_FILE=".releaserc_${{ github.sha }}"
         CONFIG_FILENAME=".releaserc"
         CONTENT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
-        if [ -f "${{ inputs.config_file_path }}" ]; then
-          CONTENT=$(cat ${{ inputs.config_file_path }})
+        if [ -f "${{ inputs.config-file-path }}" ]; then
+        
+          echo "Found file ${{ inputs.config-file-path }}"
+          CONTENT=$(cat ${{ inputs.config-file-path }})
           
           ### Checking if the configuration is in package.json
-          if [ "$(echo $CONTENT | jq 'has("release")')" == "true" ]; then
+          
+          if [ "$(echo $CONTENT | jq 'has("release")')" == "true"  ]; then
             CONTENT=$(echo $CONTENT | jq '.release')
           fi
-          if [[ ! "${{ inputs.config_file_path }}" =~ "package*" ]]; then
-            rm -f ${{ inputs.config_file_path }}
+          if [[ ! "${{ inputs.config-file-path }}" =~ "package*" ]]; then
+            rm -f ${{ inputs.config-file-path }}
           fi
           ###
           
         fi
+
         
-        TEMP_FILE="semantic-release.${{ github.sha }}.txt"
         echo $CONTENT | jq \
         --arg config_file $CONFIG_FILENAME \
         --arg file_temp $TEMP_FILE \
-        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"last_version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"next_version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
-        NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
-        NPX_FLAGS="${{ inputs.dry_run && '-d' }}"
-        eval "npx $NPX_PACKAGES semantic-release $FLAGS"
+        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"last-version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"next-version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
         
+        DRY_RUN=${{ inputs.dry-run && '-d' }}
+        npm init -y
+
+        while IFS= read -r line; do
+          eval "npm ci -s $line"
+        done < <(echo $CONTENT | jq -c '.plugins|map(if type=="array" then .[0] else . end) | . + ["@semantic-release/exec"] | unique | .[]')
+        
+        npx semantic-release
         
         if [ -f "$TEMP_FILE" ]; then
         
           while IFS= read -r line; do
             echo "::set-output name=$line"
-          done < "$TEMP_FILE"
+          done < $TEMP_FILE
         
           rm -f "$TEMP_FILE"
+          
         fi
         
