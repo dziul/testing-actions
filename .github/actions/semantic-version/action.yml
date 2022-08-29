@@ -72,11 +72,12 @@ runs:
         eval "npx $NPX_PACKAGES semantic-release $FLAGS"
         
         
-        while IFS= read -r line; do
-          echo "::set-output name=$line"
-        done < "$TEMP_FILE"
-        
         if [ -f "$TEMP_FILE" ]; then
+        
+          while IFS= read -r line; do
+            echo "::set-output name=$line"
+          done < "$TEMP_FILE"
+        
           rm -f "$TEMP_FILE"
         fi
         
