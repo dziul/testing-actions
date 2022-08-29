@@ -66,7 +66,7 @@ runs:
         echo $CONTENT | jq \
         --arg config_file $CONFIG_FILENAME \
         --arg file_temp $TEMP_FILE \
-        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"TEST=testing\" >> $GITHUB_ENV && echo \"last_version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"next_version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
+        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"last_version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"next_version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
         NPX_PACKAGES="$(echo $CONTENT | jq '.plugins|map(if type=="array" then .[0] else . end) | unique | reduce .[] as $item ("-y"; . + " -p " + $item)') -p @semantic-release/exec"
         NPX_FLAGS="${{ inputs.dry_run && '-d' }}"
         eval "npx $NPX_PACKAGES semantic-release $FLAGS"
@@ -77,8 +77,3 @@ runs:
         done < "$TEMP_FILE"
         rm -f "$TEMP_FILE"
         
-        echo "${{ env.TEST }} -----"
-        
-       
-      
-      
