@@ -55,7 +55,7 @@ runs:
           CONTENT=$(cat ${{ inputs.config_file_path }})
           
           ### Checking if the configuration is in package.json
-          if [ $(echo $CONTENT | jq 'has("release")') ]; then
+          if [ "$(echo $CONTENT | jq 'has("release")')" == "true" ]; then
             CONTENT=$(echo $CONTENT | jq '.release')
           fi
           if [[ ! "${{ inputs.config_file_path }}" =~ "package*" ]]; then
