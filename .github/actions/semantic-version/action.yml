@@ -78,7 +78,7 @@ runs:
         npm init -y
 
         while IFS= read -r line; do
-          eval "npm ci -s $line"
+          eval "npm install --silent $line"
         done < <(echo $CONTENT | jq -c '.plugins|map(if type=="array" then .[0] else . end) | . + ["@semantic-release/exec"] | unique | .[]')
         
         npx semantic-release
