@@ -21,6 +21,10 @@ inputs:
     required: false
     type: boolean
     default: false
+ node-version:
+   description: "nodejs version to use"
+   required: false
+   default: 16
     
 outputs:
   last_version:
@@ -37,11 +41,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
-    
-    - uses: actions/setup-node@v3
+    - name: Steup Nodejs
+      uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: ${{ inputs.node-version }}
     - name: Checking exists configuration file and release version
       id: release
       shell: bash
@@ -62,7 +65,7 @@ runs:
           
         fi
         
-        TEMP_FILE="${RANDOM}_${{ github.sha }}_semantic-release.txt"
+        TEMP_FILE="semantic-release.${{ github.sha }}.txt"
         echo $CONTENT | jq \
         --arg config_file $CONFIG_FILENAME \
         --arg file_temp $TEMP_FILE \
