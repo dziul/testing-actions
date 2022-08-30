@@ -11,6 +11,9 @@ branding:
   color: 'purple'
   
 inputs:
+  working-directory:
+    description: "Directory run command"
+    default: .
   config-file-path:
     description: "Configuration file from semantic-release"
     required: false
@@ -21,9 +24,6 @@ inputs:
     required: false
     type: boolean
     default: false
-  node-version:
-    description: "Nodejs version to use"
-    default: 16
     
 outputs:
   last-version:
@@ -41,12 +41,10 @@ runs:
   using: "composite"
   steps:
     
-    - uses: actions/setup-node@v3
-      with:
-        node-version: ${{ inputs.node-version }}
     - name: Checking exists configuration file and release version
       id: release
       shell: bash
+      working-directory: ${{ inputs.working-directory }}
       run: |
         TEMP_FILE=".releaserc_${{ github.sha }}"
         CONFIG_FILENAME=".releaserc"
@@ -75,10 +73,13 @@ runs:
         '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"last-version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"next-version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
         
         DRY_RUN=${{ inputs.dry-run && '-d' }}
+        
+        rm -f package*.json
+        
         npm init -y
 
         while IFS= read -r line; do
-          eval "npm install --silent $line"
+          eval "npm i -s $line"
         done < <(echo $CONTENT | jq -c '.plugins|map(if type=="array" then .[0] else . end) | . + ["@semantic-release/exec"] | unique | .[]')
         
         npx semantic-release
