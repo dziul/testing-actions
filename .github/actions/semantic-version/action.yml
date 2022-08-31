@@ -82,12 +82,13 @@ runs:
           eval "npm i -s $line"
         done < <(echo $CONTENT | jq -c '.plugins|map(if type=="array" then .[0] else . end) | . + ["@semantic-release/exec"] | unique | .[]')
         
-        npx semantic-release
+        npx semantic-release --no-ci
         
         if [ -f "$TEMP_FILE" ]; then
         
           while IFS= read -r line; do
             echo "::set-output name=$line"
+            echo "::notice:: $line"
           done < $TEMP_FILE
         
           rm -f "$TEMP_FILE"
