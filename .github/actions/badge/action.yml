@@ -1,1 +1,88 @@
+# @ref [badge](https://shields.io/)
+name: "Badge"
+description: "Fully automated badge management"
 
+# @ref [action-branding](https://actions-cool.github.io/github-action-branding/)
+branding:
+  icon: 'tag'
+  color: 'purple'
+  
+inputs:
+  working-directory:
+    description: "working directory"
+    default: .
+  output-directory:
+    description: "directory where the file will be saved"
+    required: false
+    type: string
+    default: '.github/badges'
+  file-name:
+    description: "file name"
+    required: false
+    type: string
+    default: ''
+  dry-run:
+    description: "mode dry run, only output svg"
+    type: boolean
+    default: false
+  logo:
+    description: "logo/icon"
+    type: string
+    default: ""
+  label:
+    description: "texto da parte esquerda"
+    default: "label"
+  message:
+    description: "texto da parte direita"
+    default: "message"
+  background-message:
+    description: "Background color from message"
+    default: "blue"
+  background-label:
+    description: "Background color from label"
+    default: ""
+  commit-message:
+    description: "Commit message when update badge"
+    default: "chore(badge): update"
+     
+outputs:
+  raw-data:
+    description: "raw data from badge"
+    value: ${{ steps.badge.outputs.raw-data }}
+ 
+runs:
+  using: "composite"
+  steps:
+    
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: Get badge
+      id: badge
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        FILE_NAME=${{ inputs.file-name || 'version-$GITHUB_REF_NAME' }}
+        RAW_DATA=$(curl -k -sS -f \
+        "https://img.shields.io/static/v1?label=${{ inputs.label }}&message=${{ inputs.message }}&color=${{ inputs.background-message }}&labelColor=${{ inputs.background-label }}&logo=${{ inputs.logo }}")
+        
+        echo "::set-output name=raw-data::$RAW_DATA"
+        
+        if [ "${{ inputs.dry-run }}" == "true" ]; then
+          echo "::warning:: dry run enabled"
+          exit 0
+        fi
+        
+        git pull
+        git config user.name "${{ env.GIT_AUTHOR_NAME || 'github-actions' }}"
+        git config user.email "${{ env.GIT_AUTHOR_EMAIL || 'github-actions@github.com' }}"
+
+        mkdir -p ${{ inputs.output-directory }}
+        cd ${{ inputs.output-directory }}
+        echo $RAW_DATA > ${FILE_NAME}.svg
+
+        git add *.svg
+        git diff-index --quiet HEAD || git commit -m "${{ inputs.commit-message }}"
+        git push
+        
+        
