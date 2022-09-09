@@ -65,12 +65,15 @@ runs:
           ###
           
         fi
+        
+        
+        git fetch --quiet
 
         
         echo $CONTENT | jq \
         --arg config_file $CONFIG_FILENAME \
         --arg file_temp $TEMP_FILE \
-        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"last-version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"next-version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
+        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"last-version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson);git restore package*", "successCmd": "echo \"next-version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
         
         DRY_RUN=${{ inputs.dry-run && '-d' }}
         
