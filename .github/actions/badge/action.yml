@@ -84,5 +84,3 @@ runs:
         git add *.svg
         git diff-index --quiet HEAD || git commit -m "${{ inputs.commit-message }}"
         git push --quiet
-        
-        
