@@ -18,7 +18,7 @@ inputs:
     description: "Configuration file from semantic-release"
     required: false
     type: string
-    default: ''
+    default: '.releaserc'
   dry-run:
     description: "The objective of the dry-run mode is to get a preview of the pending release."
     required: false
@@ -51,7 +51,7 @@ runs:
         CONTENT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
         if [ -f "${{ inputs.config-file-path }}" ]; then
         
-          echo "Found file ${{ inputs.config-file-path }}"
+          echo "::notice:: Found file ${{ inputs.config-file-path }}"
           CONTENT=$(cat ${{ inputs.config-file-path }})
           
           ### Checking if the configuration is in package.json
@@ -73,7 +73,7 @@ runs:
         echo $CONTENT | jq \
         --arg config_file $CONFIG_FILENAME \
         --arg file_temp $TEMP_FILE \
-        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"last-version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson);git restore package*", "successCmd": "echo \"next-version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
+        '.plugins|= .+ [["@semantic-release/exec",{"analyzeCommitsCmd":"echo \"last-version::${lastRelease.version}\" >> \($file_temp | tojson)", "verifyConditionsCmd": "rm -f \($config_file | tojson)", "successCmd": "echo \"next-version::${nextRelease.version}\">>\($file_temp | tojson) && echo \"channel::${nextRelease.channel}\">>\($file_temp | tojson)"}]]' > $CONFIG_FILENAME
         
         DRY_RUN=${{ inputs.dry-run && '-d' }}
         
@@ -83,7 +83,7 @@ runs:
 
         while IFS= read -r line; do
           eval "npm i -s $line"
-        done < <(echo $CONTENT | jq -c '.plugins|map(if type=="array" then .[0] else . end) | . + ["@semantic-release/exec"] | unique | .[]')
+        done < <(echo $CONTENT | jq -c '.plugins//[]|map(if type=="array" then .[0] else . end) | . + ["@semantic-release/exec"] | unique | .[]')
         
         npx semantic-release --no-ci
         
@@ -94,7 +94,10 @@ runs:
             echo "::notice:: $line"
           done < $TEMP_FILE
         
-          rm -f "$TEMP_FILE"
+          ### remover arquivos criados e atualizados
+          
+          git clean -df
+          git checkout .
           
         fi
         
