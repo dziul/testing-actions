@@ -46,7 +46,7 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        TEMP_FILE=".releaserc_${{ github.sha }}"
+        TEMP_FILE="${{ github.sha }}.releaserc"
         CONFIG_FILENAME=".releaserc"
         CONTENT='{"branches":["main","master"],"plugins":["@semantic-release/commit-analyzer","@semantic-release/release-notes-generator"]}'
         if [ -f "${{ inputs.config-file-path }}" ]; then
@@ -100,4 +100,3 @@ runs:
           git checkout .
           
         fi
-        
