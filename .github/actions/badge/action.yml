@@ -53,10 +53,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    
-    - uses: actions/setup-node@v3
-      with:
-        node-version: ${{ inputs.node-version }}
     - name: Get badge
       id: badge
       shell: bash
@@ -84,3 +80,5 @@ runs:
         git add *.svg
         git diff-index --quiet HEAD || git commit -m "${{ inputs.commit-message }}"
         git push --quiet
+        
+        
